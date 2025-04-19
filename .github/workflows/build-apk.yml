@@ -1,0 +1,31 @@
+name: Build APK with EAS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Clonar repositório
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: 🚀 Instalar EAS CLI
+        run: npm install -g eas-cli
+
+      - name: 🔑 Login no Expo (usando token)
+        run: eas login --token ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📲 Build APK
+        run: eas build --platform android --profile production --non-interactive
